@@ -10,22 +10,30 @@
     /* Reset & general */
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; background:#f4f6f8; color:#333; }
     a { text-decoration:none; color:inherit; }
-    
+
     /* Navbar */
-    nav { background:#0d47a1; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:10px 15px; flex-wrap:wrap; }
+    nav { background:#0d47a1; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:10px 15px; flex-wrap:wrap; position:relative; z-index:10; }
     nav .logo { font-size:1.6em; font-weight:bold; }
     nav .nav-links { display:flex; gap:20px; flex-wrap:wrap; }
     nav .nav-links a { color:#fff; font-weight:bold; transition:0.3s; }
     nav .nav-links a:hover { color:#ffca28; }
     nav .hamburger { display:none; font-size:1.5em; cursor:pointer; }
 
-    /* Main */
+    /* Video Banner */
+    .video-banner { width:100%; height:300px; overflow:hidden; position:relative; }
+    .video-banner video { width:100%; height:100%; object-fit:cover; border-bottom:5px solid #0d47a1; }
+    .video-banner .overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.35); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; color:#fff; padding:0 15px; }
+    .video-banner .overlay h1 { font-size:2.4em; margin-bottom:10px; text-shadow: 2px 2px 6px rgba(0,0,0,0.7); }
+    .video-banner .overlay p { font-size:1.2em; text-shadow: 1px 1px 5px rgba(0,0,0,0.6); animation: fadeIn 2s ease-in-out; }
+
+    @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+
     main { padding:30px 15px; max-width:1000px; margin:auto; }
 
     section { margin-bottom:50px; }
     h2 { color:#0d47a1; font-size:1.8em; margin-bottom:20px; text-align:center; }
 
-    /* Download Buttons */
+    /* Download Buttons Top */
     .download-section { text-align:center; margin-bottom:50px; }
     .download-section h2 { margin-bottom:15px; }
     .download-btns { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; }
@@ -48,10 +56,8 @@
     .screenshot img { width:100%; border-radius:12px; }
 
     /* Contact Section */
-    .contact, .donate { text-align:center; }
-    .contact p, .donate p { margin-top:10px; font-size:1em; }
-
-    .donate img { max-width:200px; width:100%; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.2); margin-top:15px; }
+    .contact { text-align:center; }
+    .contact p { margin-top:10px; font-size:1em; }
 
     /* Footer */
     footer { background:#222; color:#fff; text-align:center; padding:20px 10px; font-size:0.9em; }
@@ -66,6 +72,9 @@
         nav .nav-links { display:none; width:100%; flex-direction:column; margin-top:10px; gap:10px; }
         nav .nav-links.active { display:flex; }
         nav .hamburger { display:block; color:#fff; }
+        .video-banner { height:200px; }
+        .video-banner .overlay h1 { font-size:1.8em; }
+        .video-banner .overlay p { font-size:1em; }
     }
 </style>
 </head>
@@ -82,12 +91,24 @@
     </div>
 </nav>
 
+<!-- Video Banner with overlay text -->
+<div class="video-banner">
+    <video autoplay muted loop playsinline>
+        <source src="freshnewsai.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="overlay">
+        <h1>Fresh News AI</h1>
+        <p>Stay Informed. Curated Global News at Your Fingertips.</p>
+    </div>
+</div>
+
 <main>
-    <!-- Download Section -->
-    <section id="home" class="download-section">
+    <!-- Download Section at Top -->
+    <section class="download-section" id="home">
         <h2>Get the App Now</h2>
         <div class="download-btns">
-            <a href="#" class="btn"><i class="fa-brands fa-windows"></i> Coming Soon Windows</a>
+            <a href="#" class="btn"><i class="fa-brands fa-windows"></i> Windows</a>
             <a href="#" class="btn"><i class="fa-brands fa-android"></i> Coming Soon Android</a>
             <a href="#" class="btn"><i class="fa-brands fa-apple"></i> Coming Soon iOS</a>
         </div>
@@ -96,7 +117,7 @@
     <!-- About Section -->
     <section id="about">
         <h2>About the App</h2>
-        <p style="text-align:center;">Fresh News AI is a mobile app providing curated global news. Read free news instantly with features including all news at once, exclusive articles, and support for app development through donations.</p>
+        <p style="text-align:center;">Fresh News AI is a mobile app providing curated global news. Read free news instantly, access exclusive articles, and support app development through donations.</p>
     </section>
 
     <!-- Features Section -->
@@ -111,7 +132,7 @@
             <div class="feature">
                 <i class="fa-solid fa-star"></i>
                 <h3>AI Powered</h3>
-                <p>Unlock exclusive articles, AI powered, and advanced themes.</p>
+                <p>Unlock exclusive articles, AI-powered features, and advanced themes.</p>
             </div>
             <div class="feature">
                 <i class="fa-solid fa-hand-holding-dollar"></i>
@@ -131,17 +152,8 @@
         </div>
     </section>
 
-    <!-- Donate Section -->
-    <section class="donate">
-        <h2>Support Fresh News AI</h2>
-        <p>Scan the QR code below to donate via PayPal:</p>
-        <img src="paypal_qrcode.JPG" alt="PayPal Donation QR">
-        <p>Or <a href="https://www.paypal.com/donate?hosted_button_id=YOUR_BUTTON_ID" target="_blank">click here</a> to donate online.</p>
-    </section>
-
     <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <h2>Contact Us</h2>
+    <section class="contact" id="contact">
         <p>Need help? Contact us at <a href="mailto:jujbinlimbu@gmail.com">support@freshnewsai.com</a></p>
     </section>
 </main>
@@ -151,6 +163,7 @@
 </footer>
 
 <script>
+    // Mobile hamburger toggle
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     hamburger.addEventListener('click', () => {
@@ -160,6 +173,3 @@
 
 </body>
 </html>
-
-
-
