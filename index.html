@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fresh News AI</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+    /* Reset & general */
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; background:#f4f6f8; color:#333; }
+    a { text-decoration:none; color:inherit; }
+    header { background:#0d47a1; color:#fff; padding:20px 15px; text-align:center; }
+    header h1 { margin:0; font-size:2.2em; }
+    header p { margin:5px 0 0; font-size:1.1em; }
+
+    main { padding:30px 15px; max-width:1000px; margin:auto; }
+
+    section { margin-bottom:50px; }
+    h2 { color:#0d47a1; font-size:1.8em; margin-bottom:20px; text-align:center; }
+
+    /* Download Buttons Top */
+    .download-section { text-align:center; margin-bottom:50px; }
+    .download-section h2 { margin-bottom:15px; }
+    .download-btns { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; }
+    .btn { display:flex; align-items:center; gap:10px; background:#0d47a1; color:#fff; padding:14px 25px; border-radius:10px; font-weight:bold; font-size:1em; transition:0.3s; box-shadow:0 5px 15px rgba(0,0,0,0.1); }
+    .btn:hover { background:#08306b; transform:translateY(-3px); }
+    .btn i { font-size:1.3em; }
+
+    /* Features */
+    .features { display:flex; flex-wrap:wrap; gap:25px; justify-content:center; }
+    .feature { background:#fff; border-radius:15px; padding:25px 20px; flex:1 1 250px; box-shadow:0 6px 20px rgba(0,0,0,0.08); text-align:center; transition:transform 0.3s, box-shadow 0.3s; }
+    .feature:hover { transform:translateY(-5px); box-shadow:0 10px 25px rgba(0,0,0,0.12); }
+    .feature i { font-size:2.2em; color:#0d47a1; margin-bottom:15px; }
+    .feature h3 { margin:15px 0 10px; font-size:1.3em; }
+    .feature p { font-size:1em; line-height:1.5; }
+
+    /* Screenshots */
+    .screenshots { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
+    .screenshot { background:#fff; border-radius:15px; padding:10px; flex:1 1 250px; box-shadow:0 6px 20px rgba(0,0,0,0.08); transition:transform 0.3s; }
+    .screenshot:hover { transform:scale(1.03); }
+    .screenshot img { width:100%; border-radius:12px; }
+
+    /* Contact Section */
+    .contact { text-align:center; }
+    .contact p { margin-top:10px; font-size:1em; }
+
+    /* Footer */
+    footer { background:#222; color:#fff; text-align:center; padding:20px 10px; font-size:0.9em; }
+    footer a { color:#ffca28; transition:0.3s; }
+    footer a:hover { text-decoration:underline; }
+
+    /* Responsive */
+    @media(max-width:768px){
+        .features, .screenshots { flex-direction:column; }
+        .feature, .screenshot { flex:1 1 100%; }
+        .download-btns { flex-direction:column; gap:15px; }
+    }
+</style>
+</head>
+<body>
+<header>
+    <h1>Fresh News AI</h1>
+    <p>Your personal curated global news app</p>
+</header>
+
+<main>
+    <!-- Download Section at Top -->
+    <section class="download-section">
+        <h2>Get the App Now</h2>
+        <div class="download-btns">
+            <a href="#" class="btn"><i class="fa-brands fa-windows"></i> Windows</a>
+            <a href="#" class="btn"><i class="fa-brands fa-android"></i> Android</a>
+            <a href="#" class="btn"><i class="fa-brands fa-apple"></i> iOS</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section>
+        <h2>About the App</h2>
+        <p style="text-align:center;">Fresh News AI is a mobile app providing curated global news. Read free news instantly or features including all news at onces , exclusive articles, and support for app development through donations.</p>
+    </section>
+
+    <!-- Features Section -->
+    <section>
+        <h2>Features</h2>
+        <div class="features">
+            <div class="feature">
+                <i class="fa-solid fa-newspaper"></i>
+                <h3>Free Access</h3>
+                <p>Read curated news from global sources for free.</p>
+            </div>
+            <div class="feature">
+                <i class="fa-solid fa-star"></i>
+                <h3>Features</h3>
+                <p>Unlock exclusive articles, ai powered, and advanced themes.</p>
+            </div>
+            <div class="feature">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+                <h3>Support the App</h3>
+                <p>Donate to help us improve the app and keep it running smoothly.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section>
+        <h2>App Screenshots</h2>
+        <div class="screenshots">
+            <div class="screenshot"><img src="screenshot1.png" alt="News Feed"></div>
+            <div class="screenshot"><img src="screenshot2.png" alt="Article View"></div>
+            <div class="screenshot"><img src="screenshot3.png" alt="Free Content"></div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact">
+        <p>Need help? Contact us at <a href="mailto:support@freshnewsai.com">support@freshnewsai.com</a></p>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2025 Fresh News AI | <a href="#">Terms of Use</a> | <a href="#">Privacy Policy</a></p>
+</footer>
+</body>
+</html>
