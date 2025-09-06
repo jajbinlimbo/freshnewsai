@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy - Fresh News AI</title>
+<link rel="icon" type="image/x-icon" href="news.ico">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; background:#f4f6f8; color:#333; }
+    a { text-decoration:none; color:inherit; }
+
+    nav { background:#0d47a1; color:#fff; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:1000; }
+    nav .logo { font-size:1.6em; font-weight:bold; }
+    nav ul { list-style:none; display:flex; gap:20px; margin:0; padding:0; }
+    nav ul li a { color:#fff; font-weight:500; transition:0.3s; }
+    nav ul li a:hover { color:#ffca28; }
+    nav .hamburger { display:none; cursor:pointer; color:#fff; }
+    @media(max-width:768px){
+        nav ul { flex-direction:column; background:#0d47a1; position:absolute; top:60px; right:0; width:200px; display:none; padding:10px 0; border-radius:0 0 8px 8px; }
+        nav ul li { text-align:center; padding:10px 0; }
+        nav .hamburger { display:block; }
+    }
+
+    main { padding:30px 15px; max-width:1000px; margin:auto; }
+    h1, h2 { color:#0d47a1; }
+    h1 { font-size:2em; margin-bottom:15px; text-align:center; }
+    h2 { font-size:1.5em; margin-top:25px; margin-bottom:10px; }
+    p { line-height:1.6; margin-bottom:15px; }
+
+    footer { background:#222; color:#fff; text-align:center; padding:20px 10px; font-size:0.9em; }
+    footer a { color:#ffca28; transition:0.3s; }
+    footer a:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">Fresh News AI</div>
+    <div class="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></div>
+    <ul id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+        <li><a href="terms.html">Terms of Use</a></li>
+        <li><a href="privacy.html">Privacy Policy</a></li>
+    </ul>
+</nav>
+
+<main>
+    <h1>Privacy Policy</h1>
+
+    <h2>1. Information Collection</h2>
+    <p>We may collect information such as usage data, device information, and analytics to improve our services. We do not collect personal sensitive information without consent.</p>
+
+    <h2>2. Use of Information</h2>
+    <p>Information collected is used to improve app performance, provide content, and enhance user experience. We do not sell or share your personal data with third parties.</p>
+
+    <h2>3. Cookies & Tracking</h2>
+    <p>We may use cookies or similar technologies for analytics and improving app functionality.</p>
+
+    <h2>4. Third-Party Services</h2>
+    <p>Fresh News AI may include links to third-party services. We are not responsible for their privacy practices.</p>
+
+    <h2>5. Data Security</h2>
+    <p>We implement reasonable security measures to protect collected information. However, we cannot guarantee complete security.</p>
+
+    <h2>6. Changes to Privacy Policy</h2>
+    <p>We may update this Privacy Policy from time to time. Continued use of the app indicates acceptance of the changes.</p>
+
+    <h2>7. Contact Us</h2>
+    <p>If you have questions about this Privacy Policy, contact us at <a href="mailto:jujbinlimbu@gmail.com">support@freshnewsai.com</a>.</p>
+</main>
+
+<footer>
+    <p>&copy; 2025 Fresh News AI | <a href="terms.html">Terms of Use</a> | <a href="privacy.html">Privacy Policy</a></p>
+</footer>
+
+<script>
+function toggleMenu() {
+    const navLinks = document.getElementById('nav-links');
+    navLinks.style.display = (navLinks.style.display === "flex") ? "none" : "flex";
+}
+</script>
+</body>
+</html>
