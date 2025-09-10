@@ -8,74 +8,134 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
     /* Reset & general */
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; background:#f4f6f8; color:#333; }
+    body { 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        margin:0; padding:0; 
+        background:#f9fafb; 
+        color:#333; 
+        line-height:1.6;
+    }
     a { text-decoration:none; color:inherit; }
+    img { max-width:100%; height:auto; }
 
     /* Navbar */
-    nav { background:#0d47a1; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:10px 15px; flex-wrap:wrap; position:relative; z-index:10; }
-    nav .logo { font-size:1.6em; font-weight:bold; }
-    nav .nav-links { display:flex; gap:20px; flex-wrap:wrap; }
-    nav .nav-links a { color:#fff; font-weight:bold; transition:0.3s; }
-    nav .nav-links a:hover { color:#ffca28; }
-    nav .hamburger { display:none; font-size:1.5em; cursor:pointer; }
+    nav { 
+        background:#0d47a1; 
+        color:#fff; 
+        display:flex; 
+        justify-content:space-between; 
+        align-items:center; 
+        padding:12px 20px; 
+        flex-wrap:wrap; 
+        position:sticky; 
+        top:0; 
+        z-index:1000; 
+        box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    }
+    nav .logo { font-size:1.6em; font-weight:700; letter-spacing:0.5px; }
+    nav .nav-links { display:flex; gap:25px; flex-wrap:wrap; }
+    nav .nav-links a { color:#fff; font-weight:600; transition:0.3s; padding:6px 10px; border-radius:6px; }
+    nav .nav-links a:hover { background:#1565c0; color:#ffca28; }
+    nav .hamburger { display:none; font-size:1.7em; cursor:pointer; }
 
     /* Video Banner */
-    .video-banner { width:100%; height:300px; overflow:hidden; position:relative; }
-    .video-banner video { width:100%; height:100%; object-fit:cover; border-bottom:5px solid #0d47a1; }
-    .video-banner .overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.35); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; color:#fff; padding:0 15px; }
-    .video-banner .overlay h1 { font-size:2.4em; margin-bottom:10px; text-shadow: 2px 2px 6px rgba(0,0,0,0.7); }
-    .video-banner .overlay p { font-size:1.2em; text-shadow: 1px 1px 5px rgba(0,0,0,0.6); animation: fadeIn 2s ease-in-out; }
+    .video-banner { width:100%; height:70vh; min-height:300px; overflow:hidden; position:relative; }
+    .video-banner video { width:100%; height:100%; object-fit:cover; }
+    .video-banner .overlay { 
+        position:absolute; top:0; left:0; width:100%; height:100%; 
+        background:rgba(0,0,0,0.45); 
+        display:flex; flex-direction:column; justify-content:center; align-items:center; 
+        text-align:center; color:#fff; padding:0 15px;
+    }
+    .video-banner .overlay h1 { font-size:2.8em; margin-bottom:12px; font-weight:700; text-shadow: 2px 2px 8px rgba(0,0,0,0.6); }
+    .video-banner .overlay p { font-size:1.2em; max-width:700px; animation: fadeIn 2s ease-in-out; }
 
     @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
 
-    main { padding:30px 15px; max-width:1000px; margin:auto; }
+    main { padding:50px 20px; max-width:1200px; margin:auto; }
 
-    section { margin-bottom:50px; }
-    h2 { color:#0d47a1; font-size:1.8em; margin-bottom:20px; text-align:center; }
+    section { margin-bottom:60px; }
+    h2 { color:#0d47a1; font-size:2em; margin-bottom:20px; text-align:center; font-weight:700; }
 
     /* Download Buttons Top */
-    .download-section { text-align:center; margin-bottom:50px; }
-    .download-section h2 { margin-bottom:15px; }
+    .download-section { text-align:center; }
+    .download-section h2 { margin-bottom:20px; }
     .download-btns { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; }
-    .btn { display:flex; align-items:center; gap:10px; background:#0d47a1; color:#fff; padding:14px 25px; border-radius:10px; font-weight:bold; font-size:1em; transition:0.3s; box-shadow:0 5px 15px rgba(0,0,0,0.1); }
-    .btn:hover { background:#08306b; transform:translateY(-3px); }
+    .btn { 
+        display:flex; align-items:center; gap:10px; 
+        background:#0d47a1; 
+        color:#fff; 
+        padding:14px 28px; 
+        border-radius:12px; 
+        font-weight:600; 
+        font-size:1em; 
+        transition:all 0.3s ease; 
+        box-shadow:0 5px 18px rgba(0,0,0,0.1); 
+    }
+    .btn:hover { background:#08306b; transform:translateY(-3px) scale(1.03); }
     .btn i { font-size:1.3em; }
 
     /* Features */
-    .features { display:flex; flex-wrap:wrap; gap:25px; justify-content:center; }
-    .feature { background:#fff; border-radius:15px; padding:25px 20px; flex:1 1 250px; box-shadow:0 6px 20px rgba(0,0,0,0.08); text-align:center; transition:transform 0.3s, box-shadow 0.3s; }
-    .feature:hover { transform:translateY(-5px); box-shadow:0 10px 25px rgba(0,0,0,0.12); }
-    .feature i { font-size:2.2em; color:#0d47a1; margin-bottom:15px; }
-    .feature h3 { margin:15px 0 10px; font-size:1.3em; }
-    .feature p { font-size:1em; line-height:1.5; }
+    .features { 
+        display:grid; 
+        grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); 
+        gap:25px; 
+    }
+    .feature { 
+        background:#fff; 
+        border-radius:18px; 
+        padding:30px 20px; 
+        box-shadow:0 6px 20px rgba(0,0,0,0.08); 
+        text-align:center; 
+        transition:transform 0.3s, box-shadow 0.3s; 
+    }
+    .feature:hover { transform:translateY(-5px); box-shadow:0 10px 25px rgba(0,0,0,0.15); }
+    .feature i { font-size:2.5em; color:#0d47a1; margin-bottom:15px; }
+    .feature h3 { margin:15px 0 10px; font-size:1.4em; font-weight:600; }
+    .feature p { font-size:1em; line-height:1.6; }
 
     /* Screenshots */
-    .screenshots { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
-    .screenshot { background:#fff; border-radius:15px; padding:10px; flex:1 1 250px; box-shadow:0 6px 20px rgba(0,0,0,0.08); transition:transform 0.3s; }
-    .screenshot:hover { transform:scale(1.03); }
+    .screenshots { 
+        display:grid; 
+        grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); 
+        gap:20px; 
+    }
+    .screenshot { 
+        background:#fff; 
+        border-radius:15px; 
+        padding:12px; 
+        box-shadow:0 6px 20px rgba(0,0,0,0.08); 
+        transition:transform 0.3s ease; 
+    }
+    .screenshot:hover { transform:scale(1.05); }
     .screenshot img { width:100%; border-radius:12px; }
 
     /* Contact Section */
     .contact, .donate { text-align:center; }
-    .contact p, .donate p { margin-top:10px; font-size:1em; }
+    .contact p, .donate p { margin-top:12px; font-size:1.05em; }
 
-    .donate img { max-width:200px; width:100%; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.2); margin-top:15px; }
+    .donate img { max-width:220px; width:100%; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.15); margin-top:15px; }
 
     /* Footer */
-    footer { background:#222; color:#fff; text-align:center; padding:20px 10px; font-size:0.9em; }
+    footer { 
+        background:#111; 
+        color:#ccc; 
+        text-align:center; 
+        padding:25px 15px; 
+        font-size:0.95em; 
+        margin-top:40px; 
+    }
     footer a { color:#ffca28; transition:0.3s; }
     footer a:hover { text-decoration:underline; }
 
     /* Responsive */
     @media(max-width:768px){
-        .features, .screenshots { flex-direction:column; }
-        .feature, .screenshot { flex:1 1 100%; }
         .download-btns { flex-direction:column; gap:15px; }
         nav .nav-links { display:none; width:100%; flex-direction:column; margin-top:10px; gap:10px; }
         nav .nav-links.active { display:flex; }
         nav .hamburger { display:block; color:#fff; }
-        .video-banner { height:200px; }
-        .video-banner .overlay h1 { font-size:1.8em; }
+        .video-banner { height:50vh; }
+        .video-banner .overlay h1 { font-size:2em; }
         .video-banner .overlay p { font-size:1em; }
     }
 </style>
@@ -110,7 +170,7 @@
     <section class="download-section" id="home">
         <h2>Get the App Now</h2>
         <div class="download-btns">
-            <a href="https://drive.google.com/file/d/1bSuLSV4dQRiWN9Wvhj6QuKYmA_37iE2R/view?usp=sharing" class="btn"><i class="fa-brands fa-windows"></i> Windows</a>
+            <a href="#" class="btn"><i class="fa-brands fa-windows"></i> Coming Soon Windows</a>
             <a href="#" class="btn"><i class="fa-brands fa-android"></i> Coming Soon Android</a>
             <a href="#" class="btn"><i class="fa-brands fa-apple"></i> Coming Soon iOS</a>
         </div>
@@ -119,7 +179,7 @@
     <!-- About Section -->
     <section id="about">
         <h2>About the App</h2>
-        <p style="text-align:center;">Fresh News AI is a mobile app providing curated global news. Read free news instantly, access exclusive articles, and support app development through donations.</p>
+        <p style="text-align:center; max-width:800px; margin:auto;">Fresh News AI is a mobile app providing curated global news. Read free news instantly, access exclusive articles, and support app development through donations.</p>
     </section>
 
     <!-- Features Section -->
@@ -183,5 +243,3 @@
 
 </body>
 </html>
-
-
