@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fresh News AI — Web</title>
+  <style>
+    :root{
+      --bg: #f2f2f2; --card:#ffffff; --text:#111; --muted:#5a5a5a; --accent:#1ea1ff; --green:#0b8b52;
+      --radius:14px; --gap:12px; --max-width:1200px;
+    }
+    body{margin:0;font-family:Inter, system-ui, Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text)}
+    .app{max-width:var(--max-width);margin:18px auto;padding:8px}
+
+    /* Header */
+    .header{display:flex;gap:8px;overflow:auto;padding:8px 6px}
+    .header button,.header select{flex:0 0 auto;padding:10px 12px;border-radius:8px;border:0;background:var(--card);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+    .header .spacer{flex:1}
+
+    /* Grid */
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);align-items:start}
+    @media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:520px){.grid{grid-template-columns:1fr}}
+
+    .card{background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:0 6px 20px rgba(10,10,10,.05);display:flex;flex-direction:column}
+    .media{height:180px;background:#ddd;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .media img{width:100%;height:100%;object-fit:cover}
+    .media video{width:100%;height:100%;object-fit:cover}
+    .card-body{padding:12px;display:flex;flex-direction:column;gap:8px}
+    .title{font-weight:700;font-size:16px;line-height:1.15}
+    .summary{font-size:14px;color:var(--muted)}
+    .source{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}
+    .badge{padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+
+    .buttons{display:flex;gap:8px;padding:12px}
+    .buttons button{flex:1;padding:10px;border:0;border-radius:10px;background:var(--accent);color:#fff}
+    .buttons .donate{background:var(--green)}
+
+    /* Modals */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:99}
+    .modal{background:var(--card);padding:12px;border-radius:10px;max-width:900px;max-height:88vh;overflow:auto}
+
+    /* Settings list */
+    .themes{display:flex;gap:8px;flex-wrap:wrap}
+    .theme-btn{padding:8px 10px;border-radius:8px;border:0;background:#eee;cursor:pointer}
+
+    /* Loading */
+    .loading{padding:40px;text-align:center;color:var(--muted)}
+
+    footer{margin-top:20px;text-align:center;color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header" role="toolbar" aria-label="main toolbar">
+      <button id="homeBtn">Home</button>
+      <button id="refreshBtn">Refresh Now</button>
+      <select id="countrySelect"></select>
+      <select id="sortSelect"><option>Latest</option><option>Older</option></select>
+      <button id="settingsBtn">Settings</button>
+      <button id="aboutBtn">About</button>
+      <div class="spacer"></div>
+    </div>
+
+    <div id="grid" class="grid">
+      <div class="loading" id="loading">Loading news...</div>
+    </div>
+
+    <footer>Fresh News AI — Web • Built with HTML/CSS/JS</footer>
+  </div>
+
+  <!-- Modals container -->
+  <div id="modals"></div>
+
+  <script>
+  /* ========= Configuration ========== */
+  const RSS_FEEDS_BY_COUNTRY = {
+    "USA": ["https://rss.cnn.com/rss/edition.rss","https://feeds.nbcnews.com/nbcnews/public/news"],
+    "UK": ["http://feeds.bbci.co.uk/news/rss.xml","https://www.theguardian.com/uk/rss"],
+    "India": ["https://timesofindia.indiatimes.com/rssfeedstopstories.cms","https://www.hindustantimes.com/rss/topnews/rssfeed.xml"],
+    "Canada": ["https://www.cbc.ca/cmlink/rss-canada"],
+    "Australia": ["https://www.abc.net.au/news/feed/51120/rss.xml"],
+    "Middle East": ["https://www.aljazeera.com/xml/rss/all.xml"],
+    "Global": ["https://www.reuters.com/rssFeed/topNews","https://www.euronews.com/rss?level=theme&name=world"]
+  };
+
+  const THEMES = [
+    {name:'Default', vars:{'--bg':'#f2f2f2','--card':'#fff','--text':'#111'}},
+    {name:'Dark', vars:{'--bg':'#0b0b0b','--card':'#121212','--text':'#fff','--muted':'#bfbfbf'}},
+    {name:'Light Blue', vars:{'--bg':'#ecf8ff','--card':'#fff','--text':'#06121b'}},
+    {name:'Light Red', vars:{'--bg':'#fff0f0','--card':'#fff','--text':'#111'}},
+    {name:'Light Green', vars:{'--bg':'#f3fff3','--card':'#fff','--text':'#051501'}},
+    {name:'Purple', vars:{'--bg':'#f5f3ff','--card':'#fff','--text':'#0b0222'}}
+  ];
+
+  const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/YOUR_PAYMENT_LINK'; // replace
+  const DEFAULT_COUNTRY = 'UK';
+  const VIDEO_EXTENSIONS = ['.mp4','.webm','.ogg','.mov','.mkv','.m3u8'];
+  const USE_PROXY = true; // set false if your server proxies RSS
+  const PROXY = (url)=>`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`; // simple CORS proxy
+
+  /* ========= Helpers ========= */
+  function qs(q){return document.querySelector(q)}
+  function qsa(q){return Array.from(document.querySelectorAll(q))}
+
+  function parseRSS(xmlString){
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(xmlString, 'text/xml');
+    const items = Array.from(xml.querySelectorAll('item'));
+    const channelTitle = (xml.querySelector('channel > title')||{textContent:'Unknown'}).textContent;
+    return items.map(it=>{
+      const title = (it.querySelector('title')||{textContent:'No title'}).textContent;
+      const link = (it.querySelector('link')||{textContent:''}).textContent;
+      const description = (it.querySelector('description')||{textContent:''}).textContent;
+      const pub = (it.querySelector('pubDate')||{textContent:''}).textContent;
+      // media:content / enclosure / media:thumbnail
+      let media = '';
+      const enclosure = it.querySelector('enclosure');
+      if(enclosure && enclosure.getAttribute('url')) media = enclosure.getAttribute('url');
+      if(!media){
+        const mcont = it.getElementsByTagName('media:content');
+        if(mcont && mcont[0] && mcont[0].getAttribute('url')) media = mcont[0].getAttribute('url');
+      }
+      if(!media){
+        const mt = it.getElementsByTagName('media:thumbnail');
+        if(mt && mt[0] && mt[0].getAttribute('url')) media = mt[0].getAttribute('url');
+      }
+      if(!media){
+        // try image in description
+        const m = description.match(/<img[^>]+src=\"([^\">]+)\"/i);
+        if(m) media = m[1];
+      }
+      // strip HTML from description to create summary
+      const tmp = document.createElement('DIV'); tmp.innerHTML = description; const summary = tmp.textContent.trim();
+      return {title,link,summary,full_content:summary,source:channelTitle,media,published:pub};
+    });
+  }
+
+  function isVideoUrl(u){ if(!u) return false; u=u.toLowerCase(); return VIDEO_EXTENSIONS.some(ext=>u.endsWith(ext)); }
+
+  /* ========= App State ========= */
+  const state = {themeIndex:0,country:DEFAULT_COUNTRY,sort:'Latest',articles:[],seenLinks:new Set()};
+
+  /* ========= UI Building ========= */
+  function buildHeader(){
+    const countrySelect = qs('#countrySelect');
+    countrySelect.innerHTML = '';
+    Object.keys(RSS_FEEDS_BY_COUNTRY).forEach(c=>{const opt = document.createElement('option');opt.value=c;opt.textContent=c;countrySelect.appendChild(opt)});
+    countrySelect.value = state.country;
+
+    qs('#homeBtn').onclick = ()=>loadNews(state.country,true);
+    qs('#refreshBtn').onclick = ()=>loadNews(state.country,true);
+    countrySelect.onchange = (e)=>{state.country=e.target.value;loadNews(state.country,true)};
+    qs('#sortSelect').onchange = (e)=>{state.sort=e.target.value;loadNews(state.country,true)};
+    qs('#settingsBtn').onclick = openSettings;
+    qs('#aboutBtn').onclick = openAbout;
+  }
+
+  function applyTheme(idx){ state.themeIndex = idx; const vars = THEMES[idx].vars; for(const k in vars) document.documentElement.style.setProperty(k, vars[k]); }
+
+  function showLoading(){ const g=qs('#grid'); g.innerHTML = '<div class="loading">Loading news...</div>'; }
+
+  function renderArticles(list, replace=true){ const grid=qs('#grid'); if(replace) grid.innerHTML='';
+    if(list.length===0){ grid.innerHTML='<div class="loading">No articles found.</div>'; return }
+    list.forEach(a=>{
+      const card=document.createElement('article'); card.className='card';
+      // media
+      const mediaDiv=document.createElement('div'); mediaDiv.className='media';
+      if(a.media && isVideoUrl(a.media)){
+        const v=document.createElement('video'); v.src=a.media; v.controls=true; v.preload='metadata'; mediaDiv.appendChild(v);
+      } else if(a.media){
+        const img=document.createElement('img'); img.src=a.media; img.alt=''; img.onload=()=>{}; img.onerror=()=>{img.src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="100%" height="100%" fill="#ddd"/><text x="50%" y="50%" font-size="20" text-anchor="middle" fill="#999">No Image</text></svg>'}; mediaDiv.appendChild(img);
+      } else {
+        mediaDiv.innerHTML='<svg width="100%" height="100%" viewBox="0 0 1 1" preserveAspectRatio="none"><rect width="1" height="1" fill="#e6e6e6"/></svg>';
+      }
+      card.appendChild(mediaDiv);
+
+      const body=document.createElement('div'); body.className='card-body';
+      const title=document.createElement('div'); title.className='title'; title.textContent=a.title.length>80? a.title.slice(0,80)+'…':a.title; body.appendChild(title);
+      const summary=document.createElement('div'); summary.className='summary'; summary.textContent=a.summary.length>240? a.summary.slice(0,240)+'…':a.summary; body.appendChild(summary);
+      const source=document.createElement('div'); source.className='source';
+      const statusSpan=document.createElement('span'); const published = a.published ? new Date(a.published) : null; let status='New'; let color='var(--green)';
+      if(published){ const diff=(Date.now()-published.getTime()); if(diff>24*3600*1000){ status='Old'; color='#aaaaaa' } else if(diff>30*60*1000){ status='Late'; color='#ff9900' }}
+      statusSpan.className='badge'; statusSpan.textContent=status; statusSpan.style.background=color; statusSpan.style.color='#fff';
+      const srcText=document.createElement('span'); srcText.textContent=a.source + (published?(' • '+published.toLocaleString()):''); srcText.style.marginLeft='6px'; srcText.style.color='var(--muted)';
+      source.appendChild(statusSpan); source.appendChild(srcText);
+      body.appendChild(source);
+
+      card.appendChild(body);
+
+      const btns=document.createElement('div'); btns.className='buttons';
+      const readBtn=document.createElement('button'); readBtn.textContent='Read Full Article'; readBtn.onclick=()=>openArticleModal(a);
+      const donateBtn=document.createElement('button'); donateBtn.textContent='Donate'; donateBtn.className='donate'; donateBtn.onclick=()=>openDonateModal();
+      btns.appendChild(readBtn); btns.appendChild(donateBtn);
+      card.appendChild(btns);
+
+      // keep link mapping
+      if(!state.seenLinks.has(a.link)) state.seenLinks.add(a.link);
+      grid.appendChild(card);
+    });
+  }
+
+  /* ========= Fetching ========= */
+  async function fetchFeed(url, maxEntries=6){
+    try{
+      const target = USE_PROXY ? PROXY(url) : url;
+      const res = await fetch(target,{mode:'cors'});
+      const txt = await res.text();
+      const parsed = parseRSS(txt);
+      return parsed.slice(0,maxEntries);
+    }catch(e){console.warn('fetchFeed err',e); return []}
+  }
+
+  async function fetchNewsByCountry(country){
+    const feeds = RSS_FEEDS_BY_COUNTRY[country] || [];
+    const tasks = feeds.map(f=>fetchFeed(f));
+    const results = await Promise.all(tasks);
+    const articles = results.flat().map(a=>({...a,country}));
+    return articles;
+  }
+
+  /* ========= Loading & Population ========= */
+  async function loadNews(country, forceReplace=false){
+    showLoading();
+    try{
+      const articles = await fetchNewsByCountry(country);
+      // sort
+      articles.sort((a,b)=>{
+        const ta = a.published? new Date(a.published).getTime():0;
+        const tb = b.published? new Date(b.published).getTime():0;
+        return state.sort==='Latest' ? tb-ta : ta-tb;
+      });
+      state.articles = articles;
+      // replace grid
+      renderArticles(articles, forceReplace);
+    }catch(e){qs('#grid').innerHTML='<div class="loading">Failed to load feeds.</div>'}
+  }
+
+  /* ========= Silent refresh (only add new) ========= */
+  async function silentRefresh(){
+    const newArts = await fetchNewsByCountry(state.country);
+    newArts.sort((a,b)=>{const ta = a.published? new Date(a.published).getTime():0; const tb = b.published? new Date(b.published).getTime():0; return state.sort==='Latest' ? tb-ta : ta-tb;});
+    const unseen = newArts.filter(a=>!state.seenLinks.has(a.link));
+    if(unseen.length>0){ renderArticles(unseen,false); unseen.forEach(a=>state.seenLinks.add(a.link)); }
+  }
+
+  /* ========= Modals ========= */
+  function openModal(innerHtmlOrNode){
+    const modals = qs('#modals');
+    const backdrop = document.createElement('div'); backdrop.className='modal-backdrop';
+    const modal = document.createElement('div'); modal.className='modal';
+    if(typeof innerHtmlOrNode === 'string') modal.innerHTML = innerHtmlOrNode; else modal.appendChild(innerHtmlOrNode);
+    backdrop.appendChild(modal);
+    modals.appendChild(backdrop);
+    backdrop.onclick = (e)=>{ if(e.target===backdrop) modals.removeChild(backdrop) };
+    return {backdrop,modal,close:()=>modals.removeChild(backdrop)};
+  }
+
+  function openArticleModal(article){
+    const container = document.createElement('div');
+    const mediaDiv=document.createElement('div'); mediaDiv.style.marginBottom='8px'; mediaDiv.style.maxHeight='320px';
+    if(article.media && isVideoUrl(article.media)){
+      const v=document.createElement('video'); v.src=article.media; v.controls=true; v.style.width='100%'; v.style.maxHeight='320px'; mediaDiv.appendChild(v);
+    } else if(article.media){ const img=document.createElement('img'); img.src=article.media; img.style.width='100%'; img.style.maxHeight='320px'; img.style.objectFit='cover'; mediaDiv.appendChild(img);} 
+    container.appendChild(mediaDiv);
+
+    const content = document.createElement('div'); content.style.marginBottom='8px'; content.innerText = article.full_content || article.summary || '';
+    container.appendChild(content);
+
+    const btnRow=document.createElement('div'); btnRow.style.display='flex'; btnRow.style.gap='8px';
+    const closeBtn=document.createElement('button'); closeBtn.textContent='Close'; closeBtn.onclick=()=>m.close();
+    const openBtn=document.createElement('button'); openBtn.textContent='Open Original'; openBtn.onclick=()=>window.open(article.link,'_blank');
+    btnRow.appendChild(closeBtn); btnRow.appendChild(openBtn); container.appendChild(btnRow);
+
+    const m = openModal(container);
+  }
+
+  function openDonateModal(){
+    const node=document.createElement('div');
+    node.innerHTML = `<h3>Support FreshNewsAI</h3><p>Thank you — your donation keeps the project alive.</p>`;
+    const stripeBtn=document.createElement('button'); stripeBtn.textContent='Donate via Stripe'; stripeBtn.style.display='block'; stripeBtn.style.marginTop='8px'; stripeBtn.onclick=()=>window.open(STRIPE_PAYMENT_LINK,'_blank');
+    node.appendChild(stripeBtn);
+    const closeBtn=document.createElement('button'); closeBtn.textContent='Close'; closeBtn.style.marginTop='8px'; closeBtn.onclick=()=>m.close(); node.appendChild(closeBtn);
+    const m=openModal(node);
+  }
+
+  function openSettings(){
+    const node=document.createElement('div');
+    const h=document.createElement('h3'); h.textContent='Choose Theme'; node.appendChild(h);
+    const themesDiv=document.createElement('div'); themesDiv.className='themes';
+    THEMES.forEach((t,i)=>{const b=document.createElement('button'); b.className='theme-btn'; b.textContent=t.name; b.onclick=()=>{applyTheme(i); m.close()}; themesDiv.appendChild(b)});
+    node.appendChild(themesDiv);
+    const close=document.createElement('button'); close.textContent='Close'; close.style.marginTop='10px'; close.onclick=()=>m.close(); node.appendChild(close);
+    const m=openModal(node);
+  }
+
+  function openAbout(){
+    const node=document.createElement('div'); node.innerHTML='<h3>Fresh News AI\nVersion 1.0</h3><p>Built with HTML/CSS/JS — converted from the Kivy/Python app.</p>';
+    const c=document.createElement('button'); c.textContent='Close'; c.onclick=()=>m.close(); node.appendChild(c);
+    const m=openModal(node);
+  }
+
+  /* ========= Initialization ========= */
+  buildHeader(); applyTheme(0); loadNews(state.country,true);
+  // silent auto-refresh every 5 minutes
+  setInterval(()=>silentRefresh(), 300000);
+
+  // helpful: quick instruction if running from file:// — many browsers block fetch; run a small static server
+  if(location.protocol==='file:'){
+    console.warn('If feeds fail to load when opening the HTML file directly, run a local server (e.g. `python -m http.server`) and open via http://localhost:8000/ for CORS to work properly.');
+  }
+  </script>
+</body>
+</html>
