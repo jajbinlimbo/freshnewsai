@@ -7,140 +7,85 @@
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-    /* Reset & general */
-    body { 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-        margin:0; padding:0; 
-        background:#f9fafb; 
-        color:#333; 
-        line-height:1.6;
-    }
-    a { text-decoration:none; color:inherit; }
-    img { max-width:100%; height:auto; }
+/* Reset & Base */
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;scroll-behavior:smooth;}
+body[data-theme="light"]{--bg:#f9fafb;--text:#1c1c1e;--card:#fff;--primary:#007aff;--secondary:#0051a8;--shadow:rgba(0,0,0,0.1);}
+body[data-theme="dark"]{--bg:#111;--text:#eee;--card:#1a1a1a;--primary:#0a84ff;--secondary:#0066cc;--shadow:rgba(0,0,0,0.5);}
+body{background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
 
-    /* Navbar */
-    nav { 
-        background:#0d47a1; 
-        color:#fff; 
-        display:flex; 
-        justify-content:space-between; 
-        align-items:center; 
-        padding:12px 20px; 
-        flex-wrap:wrap; 
-        position:sticky; 
-        top:0; 
-        z-index:1000; 
-        box-shadow:0 2px 8px rgba(0,0,0,0.1);
-    }
-    nav .logo { font-size:1.6em; font-weight:700; letter-spacing:0.5px; }
-    nav .nav-links { display:flex; gap:25px; flex-wrap:wrap; }
-    nav .nav-links a { color:#fff; font-weight:600; transition:0.3s; padding:6px 10px; border-radius:6px; }
-    nav .nav-links a:hover { background:#1565c0; color:#ffca28; }
-    nav .hamburger { display:none; font-size:1.7em; cursor:pointer; }
+/* Links & Images */
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;border-radius:14px;}
 
-    /* Video Banner */
-    .video-banner { width:100%; height:70vh; min-height:300px; overflow:hidden; position:relative; }
-    .video-banner video { width:100%; height:100%; object-fit:cover; }
-    .video-banner .overlay { 
-        position:absolute; top:0; left:0; width:100%; height:100%; 
-        background:rgba(0,0,0,0.45); 
-        display:flex; flex-direction:column; justify-content:center; align-items:center; 
-        text-align:center; color:#fff; padding:0 15px;
-    }
-    .video-banner .overlay h1 { font-size:2.8em; margin-bottom:12px; font-weight:700; text-shadow: 2px 2px 8px rgba(0,0,0,0.6); }
-    .video-banner .overlay p { font-size:1.2em; max-width:700px; animation: fadeIn 2s ease-in-out; }
+/* Navbar */
+nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:14px 28px;background:var(--card);box-shadow:0 2px 10px var(--shadow);border-radius:0 0 14px 14px;}
+nav .logo{font-size:1.5em;font-weight:700;color:var(--primary);}
+nav .nav-links{display:flex;gap:22px;}
+nav .nav-links a{padding:6px 12px;border-radius:8px;font-weight:500;transition:0.25s;}
+nav .nav-links a:hover{background:var(--primary);color:#fff;}
+nav .hamburger{display:none;font-size:1.6em;cursor:pointer;}
+nav .theme-toggle{display:flex;align-items:center;justify-content:center;width:44px;height:24px;background:var(--primary);border-radius:12px;position:relative;cursor:pointer;transition:0.3s;}
+nav .theme-toggle .ball{width:20px;height:20px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:0.3s;}
+body[data-theme="dark"] nav .theme-toggle{background:#444;}
+body[data-theme="dark"] nav .theme-toggle .ball{left:22px;}
 
-    @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+/* Hero */
+.video-banner{height:80vh;min-height:360px;position:relative;overflow:hidden;border-radius:14px;margin:20px;}
+.video-banner video{width:100%;height:100%;object-fit:cover;}
+.video-banner .overlay{position:absolute;inset:0;background:rgba(0,0,0,0.35);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;color:#fff;padding:0 20px;}
+.video-banner h1{font-size:3em;font-weight:700;margin-bottom:14px;text-shadow:0 4px 18px rgba(0,0,0,0.5);}
+.video-banner p{font-size:1.2em;max-width:640px;opacity:.9;}
 
-    main { padding:50px 20px; max-width:1200px; margin:auto; }
+/* Main Sections */
+main{padding:40px 24px;max-width:1200px;margin:auto;}
+h2{text-align:center;font-size:2em;font-weight:700;margin-bottom:28px;color:var(--primary);position:relative;}
+h2::after{content:"";display:block;width:52px;height:3px;margin:12px auto 0;background:var(--primary);border-radius:2px;}
 
-    section { margin-bottom:60px; }
-    h2 { color:#0d47a1; font-size:2em; margin-bottom:20px; text-align:center; font-weight:700; }
+/* Buttons */
+.download-btns{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;margin-bottom:40px;}
+.btn{display:flex;align-items:center;gap:10px;padding:14px 26px;border-radius:999px;font-weight:600;font-size:1.05em;background:var(--primary);color:#fff;box-shadow:0 4px 14px var(--shadow);transition:transform .28s cubic-bezier(.25,.8,.25,1), box-shadow .28s ease;}
+.btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 8px 24px var(--shadow);}
+.btn i{font-size:1.2em;}
 
-    /* Download Buttons Top */
-    .download-section { text-align:center; }
-    .download-section h2 { margin-bottom:20px; }
-    .download-btns { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; }
-    .btn { 
-        display:flex; align-items:center; gap:10px; 
-        background:#0d47a1; 
-        color:#fff; 
-        padding:14px 28px; 
-        border-radius:12px; 
-        font-weight:600; 
-        font-size:1em; 
-        transition:all 0.3s ease; 
-        box-shadow:0 5px 18px rgba(0,0,0,0.1); 
-    }
-    .btn:hover { background:#08306b; transform:translateY(-3px) scale(1.03); }
-    .btn i { font-size:1.3em; }
+/* Features */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px;}
+.feature{background:var(--card);padding:28px 22px;border-radius:18px;text-align:center;box-shadow:0 2px 10px var(--shadow);transition:all .3s ease;}
+.feature:hover{transform:translateY(-6px);box-shadow:0 6px 18px var(--shadow);}
+.feature i{font-size:2.2em;color:var(--primary);margin-bottom:14px;}
+.feature h3{font-size:1.25em;margin-bottom:8px;}
+.feature p{font-size:.95em;color:var(--text);}
 
-    /* Features */
-    .features { 
-        display:grid; 
-        grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); 
-        gap:25px; 
-    }
-    .feature { 
-        background:#fff; 
-        border-radius:18px; 
-        padding:30px 20px; 
-        box-shadow:0 6px 20px rgba(0,0,0,0.08); 
-        text-align:center; 
-        transition:transform 0.3s, box-shadow 0.3s; 
-    }
-    .feature:hover { transform:translateY(-5px); box-shadow:0 10px 25px rgba(0,0,0,0.15); }
-    .feature i { font-size:2.5em; color:#0d47a1; margin-bottom:15px; }
-    .feature h3 { margin:15px 0 10px; font-size:1.4em; font-weight:600; }
-    .feature p { font-size:1em; line-height:1.6; }
+/* Screenshots */
+.screenshots{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;}
+.screenshot{background:var(--card);padding:10px;border-radius:14px;box-shadow:0 2px 12px var(--shadow);transition:transform .3s ease, box-shadow .3s ease;}
+.screenshot:hover{transform:scale(1.02);box-shadow:0 6px 20px var(--shadow);}
 
-    /* Screenshots */
-    .screenshots { 
-        display:grid; 
-        grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); 
-        gap:20px; 
-    }
-    .screenshot { 
-        background:#fff; 
-        border-radius:15px; 
-        padding:12px; 
-        box-shadow:0 6px 20px rgba(0,0,0,0.08); 
-        transition:transform 0.3s ease; 
-    }
-    .screenshot:hover { transform:scale(1.05); }
-    .screenshot img { width:100%; border-radius:12px; }
+/* Donate & Contact */
+.contact,.donate{text-align:center;}
+.contact p,.donate p{margin-top:14px;font-size:1.05em;color:var(--text);}
+.donate img{max-width:180px;margin-top:18px;border-radius:12px;box-shadow:0 4px 14px var(--shadow);}
 
-    /* Contact Section */
-    .contact, .donate { text-align:center; }
-    .contact p, .donate p { margin-top:12px; font-size:1.05em; }
+/* Footer */
+footer{background:var(--card);color:var(--text);text-align:center;padding:24px 16px;font-size:.95em;box-shadow:0 -2px 10px var(--shadow);}
+footer a{color:var(--primary);transition:.3s;}
+footer a:hover{text-decoration:underline;}
 
-    .donate img { max-width:220px; width:100%; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.15); margin-top:15px; }
-
-    /* Footer */
-    footer { 
-        background:#111; 
-        color:#ccc; 
-        text-align:center; 
-        padding:25px 15px; 
-        font-size:0.95em; 
-        margin-top:40px; 
-    }
-    footer a { color:#ffca28; transition:0.3s; }
-    footer a:hover { text-decoration:underline; }
-
-    /* Responsive */
-    @media(max-width:768px){
-        .download-btns { flex-direction:column; gap:15px; }
-        nav .nav-links { display:none; width:100%; flex-direction:column; margin-top:10px; gap:10px; }
-        nav .nav-links.active { display:flex; }
-        nav .hamburger { display:block; color:#fff; }
-        .video-banner { height:50vh; }
-        .video-banner .overlay h1 { font-size:2em; }
-        .video-banner .overlay p { font-size:1em; }
-    }
+/* Responsive */
+@media(max-width:900px){
+nav .nav-links{position:absolute;top:62px;left:0;right:0;flex-direction:column;align-items:center;background:var(--card);max-height:0;overflow:hidden;transition:0.3s;border-bottom:1px solid var(--shadow);}
+nav .nav-links.active{max-height:280px;padding:12px 0;}
+nav .hamburger{display:block;}
+}
+@media(max-width:768px){
+.video-banner{height:65vh;}
+.video-banner h1{font-size:2.3em;}
+.video-banner p{font-size:1em;}
+.download-btns{flex-direction:column;gap:14px;}
+}
 </style>
 </head>
-<body>
+<body data-theme="light">
 
 <!-- Navbar -->
 <nav>
@@ -150,14 +95,18 @@
         <a href="#home">Home</a>
         <a href="#about">About</a>
         <a href="#contact">Contact</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+    </div>
+    <div class="theme-toggle" id="themeSwitch">
+        <div class="ball"></div>
     </div>
 </nav>
 
-<!-- Video Banner with overlay text -->
+<!-- Hero -->
 <div class="video-banner">
     <video autoplay muted loop playsinline>
         <source src="freshnewsai.mp4" type="video/mp4">
-        Your browser does not support the video tag.
     </video>
     <div class="overlay">
         <h1>Fresh News AI</h1>
@@ -166,82 +115,65 @@
 </div>
 
 <main>
-    <!-- Download Section at Top -->
-    <section class="download-section" id="home">
-        <h2>Get the App Now</h2>
-        <div class="download-btns">
-            <a href="https://drive.google.com/file/d/1bSuLSV4dQRiWN9Wvhj6QuKYmA_37iE2R/view?usp=drive_link" class="btn"><i class="fa-brands fa-windows"></i> Windows</a>
-            <a href="#" class="btn"><i class="fa-brands fa-android"></i> Coming Soon Android</a>
-            <a href="#" class="btn"><i class="fa-brands fa-apple"></i> Coming Soon iOS</a>
-        </div>
-    </section>
+<section id="home">
+<h2>Get the App Now</h2>
+<div class="download-btns">
+<a href="#" class="btn"><i class="fa-brands fa-windows"></i> Windows</a>
+<a href="#" class="btn"><i class="fa-brands fa-android"></i> Coming Soon Android</a>
+<a href="#" class="btn"><i class="fa-brands fa-apple"></i> Coming Soon iOS</a>
+</div>
+</section>
 
-    <!-- About Section -->
-    <section id="about">
-        <h2>About the App</h2>
-        <p style="text-align:center; max-width:800px; margin:auto;">Fresh News AI is a mobile app providing curated global news. Read free news instantly, access exclusive articles, and support app development through donations.</p>
-    </section>
+<section id="about">
+<h2>About the App</h2>
+<p style="text-align:center; max-width:740px; margin:auto;">
+Fresh News AI delivers curated news globally with clean design, premium UX, and smart AI features. Read free content, unlock exclusives, and support development with donations.
+</p>
+</section>
 
-    <!-- Features Section -->
-    <section>
-        <h2>Features</h2>
-        <div class="features">
-            <div class="feature">
-                <i class="fa-solid fa-newspaper"></i>
-                <h3>Free Access</h3>
-                <p>Read curated news from global sources for free.</p>
-            </div>
-            <div class="feature">
-                <i class="fa-solid fa-star"></i>
-                <h3>AI Powered</h3>
-                <p>Unlock exclusive articles, AI-powered features, and advanced themes.</p>
-            </div>
-            <div class="feature">
-                <i class="fa-solid fa-hand-holding-dollar"></i>
-                <h3>Support the App</h3>
-                <p>Donate to help us improve the app and keep it running smoothly.</p>
-            </div>
-        </div>
-    </section>
+<section>
+<h2>Features</h2>
+<div class="features">
+<div class="feature"><i class="fa-solid fa-newspaper"></i><h3>Free Access</h3><p>Enjoy curated news from top sources without cost.</p></div>
+<div class="feature"><i class="fa-solid fa-robot"></i><h3>AI Powered</h3><p>Discover exclusive insights and personalized news feeds.</p></div>
+<div class="feature"><i class="fa-solid fa-hand-holding-dollar"></i><h3>Support Growth</h3><p>Donate to help us scale and keep Fresh News AI premium.</p></div>
+</div>
+</section>
 
-    <!-- Screenshots Section -->
-    <section>
-        <h2>App Screenshots</h2>
-        <div class="screenshots">
-            <div class="screenshot"><img src="freshnewsai.png" alt="News Feed"></div>
-            <div class="screenshot"><img src="freshnewsai_2.png" alt="Article View"></div>
-            <div class="screenshot"><img src="freshnewsai_3.png" alt="Free Content"></div>
-        </div>
-    </section>
+<section>
+<h2>App Screenshots</h2>
+<div class="screenshots">
+<div class="screenshot"><img src="freshnewsai.png" alt="News Feed"></div>
+<div class="screenshot"><img src="freshnewsai_2.png" alt="Article View"></div>
+<div class="screenshot"><img src="freshnewsai_3.png" alt="Free Content"></div>
+</div>
+</section>
 
-        <!-- Donate Section -->
-    <section class="donate">
-        <h2>Support Fresh News AI</h2>
-        <p>Scan the QR code below to donate via PayPal:</p>
-        <img src="paypal_qrcode.JPG" alt="PayPal Donation QR">
-        <p>Or <a href="https://www.paypal.com/donate?hosted_button_id=YOUR_BUTTON_ID" target="_blank">click here</a> to donate online.</p>
-    </section>
+<section class="donate">
+<h2>Support Fresh News AI</h2>
+<p>Scan the QR code below to donate via PayPal:</p>
+<img src="paypal_qrcode.JPG" alt="PayPal Donation QR">
+<p>Or <a href="#">click here</a> to donate online.</p>
+</section>
 
-    <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <p>Need help? Contact us at <a href="mailto:jujbinlimbu@gmail.com">support@freshnewsai.com</a></p>
-    </section>
+<section class="contact" id="contact">
+<p>Need help? Contact us at <a href="mailto:jujbinlimbu@gmail.com">support@freshnewsai.com</a></p>
+</section>
 </main>
 
 <footer>
-    <p>&copy; 2025 Fresh News AI | <a href="terms.html">Terms of Use</a> | <a href="privacy.html">Privacy Policy</a></p>
+<p>&copy; 2025 Fresh News AI | <a href="terms.html">Terms</a> | <a href="privacy.html">Privacy</a></p>
 </footer>
 
 <script>
-    // Mobile hamburger toggle
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-    hamburger.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-    });
-</script>
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+hamburger.addEventListener('click', () => navLinks.classList.toggle('active'));
 
+const themeSwitch = document.getElementById('themeSwitch');
+themeSwitch.addEventListener('click', () => {
+  document.body.dataset.theme = document.body.dataset.theme === 'light' ? 'dark' : 'light';
+});
+</script>
 </body>
 </html>
-
-
